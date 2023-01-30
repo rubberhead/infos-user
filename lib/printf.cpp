@@ -4,13 +4,13 @@
 
 int printf(const char *fmt, ...)
 {
-	char buffer[0x1000];
+	char buffer[0x1000]; // 4096 bytes buffer, check overflow?
 
-	int rc;
-	va_list args;
+	int rc; 		// "read-count?"
+	va_list args;   // "variadic list" for e.g., functions taking a variable number of arguments
 
 	va_start(args, fmt);
-	rc = vsnprintf(buffer, sizeof(buffer)-1, fmt, args);
+	rc = vsnprintf(buffer, sizeof(buffer)-1, fmt, args); // Fills at max 4096 chars into buffer, no overflow.
 	va_end(args);
 
 	write(__console_handle, buffer, rc);
