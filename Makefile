@@ -10,7 +10,7 @@ export bin-dir := $(top-dir)/bin
 
 crt-target := crt.a
 lib-target := libinfos.a
-tool-targets := init ls tree shell prio-sched-test sleep-sched-test ticker-sched-test hello-world mandelbrot cat date tictactoe time
+tool-targets := init ls tree shell prio-sched-test sleep-sched-test ticker-sched-test hello-world mandelbrot cat date tictactoe time conc-sched-test
 
 export real-crt-target   := $(bin-dir)/$(crt-target)
 export real-lib-target   := $(bin-dir)/$(lib-target)
