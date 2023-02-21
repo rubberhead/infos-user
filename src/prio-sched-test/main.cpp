@@ -24,8 +24,10 @@ static void sleep_thread_proc(void *arg)
 static void ticker1_thread_proc(void *arg)
 {
     printf("Thread 1 ticking every 1.5s\n");
-    while (!terminate) {
+    size_t tick_count = 0;
+    while (tick_count < 8) {
         printf("TICK 1!\n");
+        tick_count++; 
         usleep(1500000);
     }
 
@@ -35,14 +37,17 @@ static void ticker1_thread_proc(void *arg)
 static void ticker2_thread_proc(void *arg)
 {
     printf("Thread 2 ticking every 1s\n");
-    while (!terminate) {
+    size_t tick_count = 0; 
+    while (tick_count < 16) {
         printf("TICK 2!\n");
+        tick_count++; 
         usleep(1000000);
     }
 
     stop_thread(HTHREAD_SELF);
 }
 
+/*
 static void terminate_ticker_thread_proc(void *arg)
 {
     printf("Press <ENTER> to stop\n");
@@ -51,7 +56,7 @@ static void terminate_ticker_thread_proc(void *arg)
     terminate = true;
 
     stop_thread(HTHREAD_SELF);
-}
+}*/
 
 static void fibonacci_thread_proc(void *arg) {
     int f1 = 0;
@@ -98,18 +103,18 @@ int main(const char *cmdline)
 
     terminate = false;
 
-    HTHREAD threads[15];
+    HTHREAD threads[14];
 	printf("Using %d threads...\n", ARRAY_SIZE(threads));
 	for (unsigned int i = 0; i < 10; i++) {
 		threads[i] = create_thread(sleep_thread_proc, (void *)(unsigned long)i, SchedulingEntityPriority::REALTIME);
 	}
 
-    threads[10] = create_thread(terminate_ticker_thread_proc, nullptr, SchedulingEntityPriority::INTERACTIVE);
-    threads[11] = create_thread(ticker1_thread_proc, nullptr, SchedulingEntityPriority::INTERACTIVE);
-    threads[12] = create_thread(ticker2_thread_proc, nullptr, SchedulingEntityPriority::INTERACTIVE);
+    // threads[10] = create_thread(terminate_ticker_thread_proc, nullptr, SchedulingEntityPriority::INTERACTIVE);
+    threads[10] = create_thread(ticker1_thread_proc, nullptr, SchedulingEntityPriority::INTERACTIVE);
+    threads[11] = create_thread(ticker2_thread_proc, nullptr, SchedulingEntityPriority::INTERACTIVE);
 
-    threads[13] = create_thread(fibonacci_thread_proc, nullptr, SchedulingEntityPriority::DAEMON);
-    threads[14] = create_thread(tribonacci_thread_proc, nullptr, SchedulingEntityPriority::DAEMON);
+    threads[12] = create_thread(fibonacci_thread_proc, nullptr, SchedulingEntityPriority::DAEMON);
+    threads[13] = create_thread(tribonacci_thread_proc, nullptr, SchedulingEntityPriority::DAEMON);
 
 	for (unsigned int i = 0; i < ARRAY_SIZE(threads); i++) {
 		printf("Waiting for thread %d...\n", i);
